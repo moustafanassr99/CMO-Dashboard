@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cleopatra Sky Hospital — CMO Command Center</title>
+<meta name="description" content="Executive Command Center — Cleopatra Sky Hospital">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-mark">CS</div>
+    <div class="brand-text">
+      <h1>Cleopatra Sky Hospital</h1>
+      <p>Executive Command Center</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge" id="liveBadge">
+      <span class="live-dot"></span>
+      <span id="liveLabel">Connecting…</span>
+    </div>
+    <div class="nav-pills">
+      <button class="nav-pill active" data-view="cmo">CMO View</button>
+      <button class="nav-pill" data-view="dept">Data Entry</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ======================= CMO VIEW ======================= -->
+  <div class="view active" id="view-cmo">
+
+    <!-- PULSE STRIP -->
+    <div class="pulse">
+      <div class="pulse-dot green" id="pulseDot"></div>
+      <div class="pulse-text">
+        <div class="label">Hospital Pulse</div>
+        <div class="headline" id="pulseHeadline">Loading today's hospital data…</div>
+      </div>
+      <div class="pulse-date">
+        <strong id="pulseDateLabel">—</strong>
+        <span id="pulseUpdated">Connecting to live feed…</span>
+      </div>
+    </div>
+
+    <!-- ERROR BANNER (hidden by default) -->
+    <div class="error-banner" id="errorBanner" style="display:none;">
+      <span>⚠️</span>
+      <span id="errorMsg">Unable to load live data.</span>
+      <button onclick="loadDashboard()" class="retry-btn">Retry</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Today's Hospital Status</h2>
+        <span class="sub" id="kpiSub">As of this morning</span>
+      </div>
+      <div class="kpi-grid" id="kpiGrid">
+        <!-- Skeleton loaders -->
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div>
+      </div>
+    </div>
+
+    <!-- CAPACITY -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Hospital Capacity</h2>
+        <span class="sub">Live bed status</span>
+      </div>
+      <div class="capacity-grid" id="capGrid">
+        <div class="cap-card skeleton"></div>
+        <div class="cap-card skeleton"></div>
+        <div class="cap-card skeleton"></div>
+        <div class="cap-card skeleton"></div>
+      </div>
+    </div>
+
+    <!-- PATIENT FLOW -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Patient Flow</h2>
+        <span class="sub">Today's journey — OPD to discharge</span>
+      </div>
+      <div class="flow-wrap" id="flowWrap">
+        <div style="color:var(--gray); font-size:13px; padding:20px;">Loading flow data…</div>
+      </div>
+    </div>
+
+    <!-- PROCEDURES -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Procedures &amp; Tomorrow's Schedule</h2>
+        <span class="sub">Today's cases · Tomorrow's planned OR</span>
+      </div>
+      <div class="proc-grid" id="procGrid">
+        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div>
+      </div>
+    </div>
+
+    <!-- TRENDS -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Trends</h2>
+        <span class="sub">Census &amp; occupancy over time</span>
+      </div>
+      <div class="trend-grid">
+        <div class="trend-card">
+          <div class="trend-head">
+            <h3>OPD + ED Census</h3>
+            <div class="range-toggle">
+              <button class="range-btn active" data-chart="census" data-range="7">7D</button>
+              <button class="range-btn" data-chart="census" data-range="30">30D</button>
+            </div>
+          </div>
+          <svg class="chart" id="chartCensus"></svg>
+        </div>
+        <div class="trend-card">
+          <div class="trend-head">
+            <h3>Hospital Occupancy %</h3>
+            <div class="range-toggle">
+              <button class="range-btn active" data-chart="occ" data-range="7">7D</button>
+              <button class="range-btn" data-chart="occ" data-range="30">30D</button>
+            </div>
+          </div>
+          <svg class="chart" id="chartOcc"></svg>
+        </div>
+      </div>
+    </div>
+
+    <footer>Cleopatra Sky Hospital · Internal Executive Use Only · Data refreshes automatically on every submission</footer>
+  </div>
+
+  <!-- ======================= DATA ENTRY VIEW ======================= -->
+  <div class="view" id="view-dept">
+    <div class="dept-shell">
+      <div class="section-head" style="margin-bottom:18px;">
+        <h2 style="font-family:'Playfair Display',serif; font-size:17px; color:var(--blue);">Daily Report Entry</h2>
+        <span class="sub">Submit today's figures via Microsoft Forms</span>
+      </div>
+      <div id="formLaunchers"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
