@@ -74,7 +74,7 @@ async function loadDashboard() {
   try {
     // On first load show placeholder in pulse
     if (!snapshot) {
-      document.getElementById('pulseHeadline').textContent = 'Loading today's hospital data…';
+      document.getElementById('pulseHeadline').textContent = 'Loading hospital data...';
     }
 
     const raw = await fetchDashboardData();
