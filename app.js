@@ -97,7 +97,10 @@ async function loadDashboard() {
       mortality:  num(raw.Mortalities || 0),
       cathLab:    num(raw.CathLabCases || 0),
       endoscopy:  num(raw.EndoscopyCases || 0),
-      orTomorrow: num(raw.ORScheduledTomorrow || 0),
+      orTomorrow:      num(raw.ORScheduledTomorrow || 0),
+      cathLabTomorrow: num(raw.CathLabTomorrow || 0),
+      endoTomorrow:    num(raw.EndoscopyTomorrow || 0),
+      vipUpdates:      Array.isArray(raw.VIPUpdates) ? raw.VIPUpdates : [],
     };
 
     totalBeds       = num(raw.TotalBeds)         || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
@@ -123,6 +126,8 @@ async function loadDashboard() {
     renderCapacity();
     renderFlow();
     renderProcedures();
+    renderTomorrow();
+    renderVIP();
     renderTrends();
 
   } catch (err) {
