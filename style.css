@@ -363,3 +363,51 @@ footer {
   .kpi-value { font-size: 26px; }
   .nav-pills { overflow-x: auto; }
 }
+
+/* ---- 4-COLUMN PROC GRID ---- */
+.proc-grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ---- VIP SECTION ---- */
+.vip-section {
+  background: #fff; border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.vip-card {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px; border-bottom: 1px solid var(--line);
+  transition: background .15s ease;
+}
+.vip-card:last-child { border-bottom: none; }
+.vip-card:hover { background: var(--gold-light); }
+.vip-icon {
+  font-size: 22px; width: 44px; height: 44px;
+  background: var(--gold-light); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.vip-body { flex: 1; min-width: 0; }
+.vip-name {
+  font-weight: 700; font-size: 14px; color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.vip-note { font-size: 12px; color: var(--gray); margin-top: 3px; }
+.vip-badge {
+  font-size: 11px; font-weight: 700; padding: 4px 10px;
+  border-radius: 20px; flex-shrink: 0; letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.vip-stable   { background: var(--green-light); color: var(--green); }
+.vip-critical { background: var(--red-light); color: var(--red); }
+.vip-empty {
+  display: flex; align-items: center; gap: 10px;
+  padding: 28px 22px; color: var(--gray); font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 900px) {
+  .proc-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .proc-grid-4 { grid-template-columns: 1fr 1fr; }
+}
