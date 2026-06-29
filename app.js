@@ -83,7 +83,7 @@ async function loadDashboard() {
       orTomorrow:      num(raw.ORScheduledTomorrow || 0),
       cathLabTomorrow: num(raw.CathLabTomorrow || 0),
       endoTomorrow:    num(raw.EndoscopyTomorrow || 0),
-      vipUpdates:      Array.isArray(raw.VIPUpdates) ? raw.VIPUpdates : [],
+vipUpdates: raw.VIPStatus || raw.VIPUpdates || '',
     };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
@@ -309,21 +309,38 @@ function renderTomorrow() {
    ============================================================ */
 function renderVIP() {
   var container = document.getElementById('vipList');
-  if (!snapshot.vipUpdates || snapshot.vipUpdates.length === 0) {
-    container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
-    return;
-  }
-  container.innerHTML = snapshot.vipUpdates.map(function(v) {
-    var statusClass = (v.Status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
-    return '<div class="vip-card">' +
+  var data = snapshot.vipUpdates;
+
+  // Handle plain text from form
+  if (typeof data === 'string' && data.trim() !== '') {
+    container.innerHTML =
+      '<div class="vip-card">' +
       '<div class="vip-icon">👑</div>' +
       '<div class="vip-body">' +
-      '<div class="vip-name">' + (v.Name || 'VIP Patient') + '</div>' +
-      '<div class="vip-note">' + (v.Note || '') + '</div>' +
+      '<div class="vip-name">VIP Update</div>' +
+      '<div class="vip-note">' + data + '</div>' +
       '</div>' +
-      '<div class="vip-badge ' + statusClass + '">' + (v.Status || 'Active') + '</div>' +
       '</div>';
-  }).join('');
+    return;
+  }
+
+  // Handle array
+  if (Array.isArray(data) && data.length > 0) {
+    container.innerHTML = data.map(function(v) {
+      var statusClass = (v.Status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
+      return '<div class="vip-card">' +
+        '<div class="vip-icon">👑</div>' +
+        '<div class="vip-body">' +
+        '<div class="vip-name">' + (v.Name || 'VIP Patient') + '</div>' +
+        '<div class="vip-note">' + (v.Note || '') + '</div>' +
+        '</div>' +
+        '<div class="vip-badge ' + statusClass + '">' + (v.Status || 'Active') + '</div>' +
+        '</div>';
+    }).join('');
+    return;
+  }
+
+  container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
 }
 
 /* ============================================================
