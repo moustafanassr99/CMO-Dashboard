@@ -411,3 +411,14 @@ footer {
 @media (max-width: 480px) {
   .proc-grid-4 { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---- 2-COLUMN CENTERED PROC GRID ---- */
+.proc-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 340px));
+  gap: 14px;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .proc-grid-2 { grid-template-columns: 1fr 1fr; }
+}
