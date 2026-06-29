@@ -3,8 +3,8 @@ const CONFIG = {
   jsonbinKey: "$2a$10$GkaVoeERdWZKR6zbFgJvauDlU2QqRxih8vwP07eNclrVSGBIkMwmy",
 
   forms: {
-    opd:      "PASTE_OPD_FORM_LINK_HERE",
-    hospital: "PASTE_HOSPITAL_FORM_LINK_HERE"
+    opd:      "https://forms.office.com/r/ebT3Acy687?origin=lprLink",
+    hospital: "https://forms.office.com/r/f5J7rexRQg?origin=lprLink"
   },
 
   refreshIntervalMinutes: 5,
