@@ -243,7 +243,6 @@ function renderCapacity() {
 /* ============================================================
    PATIENT FLOW
    ============================================================ */
-function renderFlow() {
   var steps = [
     { label: 'OPD',       num: snapshot.census,     sub: 'seen today' },
     { label: 'ED',        num: snapshot.edCensus,   sub: 'seen today' },
