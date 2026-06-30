@@ -107,7 +107,6 @@ async function loadDashboard() {
     setPulse();
     renderKPIs();
     renderCapacity();
-    renderFlow();
     renderProcedures();
     renderTomorrow();
     renderVIP();
@@ -238,28 +237,6 @@ function renderCapacity() {
       '<div class="bar-track"><div class="bar-fill" style="width:' + Math.min(c.pct, 100) + '%; background:' + c.color + '"></div></div>' +
       '<div class="cap-foot"><span>' + c.sub + '</span><strong>' + c.foot + '</strong></div>' +
       '</div>';
-  }).join('');
-}
-
-/* ============================================================
-   PATIENT FLOW
-   ============================================================ */
-function renderFlow() {
-  var steps = [
-    { label: 'OPD',       num: snapshot.census,     sub: 'seen today' },
-    { label: 'ED',        num: snapshot.edCensus,   sub: 'seen today' },
-    { label: 'Admission', num: totalAdmissions,     sub: 'referred in' },
-    { label: 'Inpatient', num: snapshot.occBeds,    sub: 'occupied beds' },
-    { label: 'Discharge', num: snapshot.discharges, sub: 'today' },
-  ];
-
-  document.getElementById('flowWrap').innerHTML = steps.map(function(s, i) {
-    return '<div class="flow-step">' +
-      '<div class="flow-circle"><div class="num">' + s.num + '</div></div>' +
-      '<div class="flow-label">' + s.label + '</div>' +
-      '<div class="flow-sub">' + s.sub + '</div>' +
-      '</div>' +
-      (i < steps.length - 1 ? '<div class="flow-arrow">→</div>' : '');
   }).join('');
 }
 
