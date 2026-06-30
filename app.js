@@ -107,7 +107,6 @@ vipUpdates: raw.VIPStatus || raw.VIPUpdates || '',
     setPulse();
     renderKPIs();
     renderCapacity();
-    renderFlow();
     renderProcedures();
     renderTomorrow();
     renderVIP();
