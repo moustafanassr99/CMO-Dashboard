@@ -107,7 +107,6 @@ async function loadDashboard() {
     setPulse();
     renderKPIs();
     renderCapacity();
-    renderFlow();
     renderProcedures();
     renderTomorrow();
     renderVIP();
