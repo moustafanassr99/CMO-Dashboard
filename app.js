@@ -83,7 +83,12 @@ async function loadDashboard() {
       orTomorrow:      num(raw.ORScheduledTomorrow || 0),
       cathLabTomorrow: num(raw.CathLabTomorrow || 0),
       endoTomorrow:    num(raw.EndoscopyTomorrow || 0),
-      vipUpdates:      Array.isArray(raw.VIPUpdates) ? raw.VIPUpdates : [],
+      vipUpdates:      raw.VIPStatus || raw.VIPUpdates || '',
+      codeSilver:      num(raw.CodeSilver || 0),
+      codeGrey:        num(raw.CodeGrey || 0),
+      codeBlue:        num(raw.CodeBlue || 0),
+      codeUpdates:     raw.CodeUpdates || '',
+      hotTopics:       raw.HotTopics || '',
     };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
@@ -110,6 +115,8 @@ async function loadDashboard() {
     renderProcedures();
     renderTomorrow();
     renderVIP();
+    renderCodes();
+    renderHotTopics();
     renderTrends();
 
   } catch (err) {
@@ -286,21 +293,90 @@ function renderTomorrow() {
    ============================================================ */
 function renderVIP() {
   var container = document.getElementById('vipList');
-  if (!snapshot.vipUpdates || snapshot.vipUpdates.length === 0) {
-    container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
-    return;
-  }
-  container.innerHTML = snapshot.vipUpdates.map(function(v) {
-    var statusClass = (v.Status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
-    return '<div class="vip-card">' +
+  var data = snapshot.vipUpdates;
+
+  if (typeof data === 'string' && data.trim() !== '') {
+    container.innerHTML =
+      '<div class="vip-card">' +
       '<div class="vip-icon">👑</div>' +
       '<div class="vip-body">' +
-      '<div class="vip-name">' + (v.Name || 'VIP Patient') + '</div>' +
-      '<div class="vip-note">' + (v.Note || '') + '</div>' +
+      '<div class="vip-name">VIP Update</div>' +
+      '<div class="vip-note">' + data + '</div>' +
       '</div>' +
-      '<div class="vip-badge ' + statusClass + '">' + (v.Status || 'Active') + '</div>' +
+      '</div>';
+    return;
+  }
+
+  if (Array.isArray(data) && data.length > 0) {
+    container.innerHTML = data.map(function(v) {
+      var statusClass = (v.Status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
+      return '<div class="vip-card">' +
+        '<div class="vip-icon">👑</div>' +
+        '<div class="vip-body">' +
+        '<div class="vip-name">' + (v.Name || 'VIP Patient') + '</div>' +
+        '<div class="vip-note">' + (v.Note || '') + '</div>' +
+        '</div>' +
+        '<div class="vip-badge ' + statusClass + '">' + (v.Status || 'Active') + '</div>' +
+        '</div>';
+    }).join('');
+    return;
+  }
+
+  container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
+}
+
+/* ============================================================
+   HOSPITAL CODES
+   ============================================================ */
+function renderCodes() {
+  var cards = [
+    { icon: '🥈', label: 'Code Silver', value: snapshot.codeSilver, color: '#8C8C8C', bg: '#F0F0F0' },
+    { icon: '⬛', label: 'Code Grey',   value: snapshot.codeGrey,   color: '#5A5A5A', bg: '#ECECEC' },
+    { icon: '🔵', label: 'Code Blue',   value: snapshot.codeBlue,   color: 'var(--blue)', bg: 'var(--blue-light)' },
+  ];
+
+  document.getElementById('codesGrid').innerHTML = cards.map(function(c) {
+    return '<div class="proc-card">' +
+      '<div class="proc-accent" style="background:' + c.color + '"></div>' +
+      '<span class="proc-icon">' + c.icon + '</span>' +
+      '<div class="proc-value">' + c.value + '</div>' +
+      '<div class="proc-label">' + c.label + '</div>' +
+      '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.color + ';">Today</span>' +
       '</div>';
   }).join('');
+
+  var listContainer = document.getElementById('codesList');
+  if (snapshot.codeUpdates && snapshot.codeUpdates.trim() !== '') {
+    listContainer.innerHTML =
+      '<div class="vip-card">' +
+      '<div class="vip-icon">🚨</div>' +
+      '<div class="vip-body">' +
+      '<div class="vip-name">Code Details</div>' +
+      '<div class="vip-note">' + snapshot.codeUpdates + '</div>' +
+      '</div>' +
+      '</div>';
+  } else {
+    listContainer.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">🚨</span><span>No code details reported today</span></div>';
+  }
+}
+
+/* ============================================================
+   HOSPITAL HOT TOPICS
+   ============================================================ */
+function renderHotTopics() {
+  var container = document.getElementById('hotTopicsList');
+  if (snapshot.hotTopics && snapshot.hotTopics.trim() !== '') {
+    container.innerHTML =
+      '<div class="vip-card">' +
+      '<div class="vip-icon">🔥</div>' +
+      '<div class="vip-body">' +
+      '<div class="vip-name">Hot Topics</div>' +
+      '<div class="vip-note">' + snapshot.hotTopics + '</div>' +
+      '</div>' +
+      '</div>';
+  } else {
+    container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">🔥</span><span>No hot topics reported today</span></div>';
+  }
 }
 
 /* ============================================================
