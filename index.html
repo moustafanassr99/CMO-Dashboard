@@ -90,7 +90,16 @@
       </div>
     </div>
 
-   
+    <!-- PATIENT FLOW -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Patient Flow</h2>
+        <span class="sub">Today's journey — OPD to discharge</span>
+      </div>
+      <div class="flow-wrap" id="flowWrap">
+        <div style="color:var(--gray); font-size:13px; padding:20px;">Loading flow data…</div>
+      </div>
+    </div>
 
     <!-- PROCEDURES TODAY -->
     <div class="section">
@@ -128,6 +137,39 @@
         <div class="vip-empty">
           <span style="font-size:22px;">👑</span>
           <span>Loading VIP data...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOSPITAL CODES -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Hospital Codes</h2>
+        <span class="sub">Code Silver · Grey · Blue — counts and details</span>
+      </div>
+      <div class="proc-grid" id="codesGrid">
+        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div>
+      </div>
+      <div class="vip-section" id="codesList" style="margin-top:14px;">
+        <div class="vip-empty">
+          <span style="font-size:22px;">🚨</span>
+          <span>Loading code data...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOSPITAL HOT TOPICS -->
+    <div class="section">
+      <div class="section-head">
+        <h2>Hospital Hot Topics</h2>
+        <span class="sub">Today's key updates and announcements</span>
+      </div>
+      <div class="vip-section" id="hotTopicsList">
+        <div class="vip-empty">
+          <span style="font-size:22px;">🔥</span>
+          <span>Loading hot topics...</span>
         </div>
       </div>
     </div>
