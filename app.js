@@ -89,6 +89,8 @@ async function loadDashboard() {
       codeBlue:        num(raw.CodeBlue || 0),
       codeUpdates:     raw.CodeUpdates || '',
       hotTopics:       raw.HotTopics || '',
+      damaCount:       num(raw.DAMACount || 0),
+      damaExplain:     raw.DAMAExplanation || '',
     };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
@@ -117,6 +119,7 @@ async function loadDashboard() {
     renderVIP();
     renderCodes();
     renderHotTopics();
+    renderDAMA();
     renderTrends();
 
   } catch (err) {
@@ -295,34 +298,41 @@ function renderVIP() {
   var container = document.getElementById('vipList');
   var data = snapshot.vipUpdates;
 
+  /* Expects each row typed in the form as: Name & Room | Consultant | Status
+     separated by newlines, one VIP per line, up to 5 rows.
+     Example line: John Smith - Room 304 | Dr. Ahmed | Stable */
+  var rows = [];
   if (typeof data === 'string' && data.trim() !== '') {
-    container.innerHTML =
-      '<div class="vip-card">' +
-      '<div class="vip-icon">👑</div>' +
-      '<div class="vip-body">' +
-      '<div class="vip-name">VIP Update</div>' +
-      '<div class="vip-note">' + data + '</div>' +
-      '</div>' +
-      '</div>';
+    rows = data.split(/\r?\n/).map(function(line) {
+      var parts = line.split('|').map(function(p) { return p.trim(); });
+      return {
+        nameRoom:   parts[0] || '',
+        consultant: parts[1] || '',
+        status:     parts[2] || ''
+      };
+    }).filter(function(r) { return r.nameRoom !== ''; }).slice(0, 5);
+  }
+
+  if (rows.length === 0) {
+    container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
     return;
   }
 
-  if (Array.isArray(data) && data.length > 0) {
-    container.innerHTML = data.map(function(v) {
-      var statusClass = (v.Status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
-      return '<div class="vip-card">' +
-        '<div class="vip-icon">👑</div>' +
-        '<div class="vip-body">' +
-        '<div class="vip-name">' + (v.Name || 'VIP Patient') + '</div>' +
-        '<div class="vip-note">' + (v.Note || '') + '</div>' +
-        '</div>' +
-        '<div class="vip-badge ' + statusClass + '">' + (v.Status || 'Active') + '</div>' +
-        '</div>';
-    }).join('');
-    return;
-  }
+  var tableHtml =
+    '<table class="vip-table">' +
+    '<thead><tr><th>Patient Name &amp; Room</th><th>Consultant</th><th>Status</th></tr></thead>' +
+    '<tbody>' +
+    rows.map(function(r) {
+      var statusClass = (r.status || '').toLowerCase() === 'critical' ? 'vip-critical' : 'vip-stable';
+      return '<tr>' +
+        '<td>' + r.nameRoom + '</td>' +
+        '<td>' + r.consultant + '</td>' +
+        '<td><span class="vip-badge ' + statusClass + '">' + (r.status || 'Active') + '</span></td>' +
+        '</tr>';
+    }).join('') +
+    '</tbody></table>';
 
-  container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">👑</span><span>No VIP updates for today</span></div>';
+  container.innerHTML = tableHtml;
 }
 
 /* ============================================================
@@ -330,8 +340,8 @@ function renderVIP() {
    ============================================================ */
 function renderCodes() {
   var cards = [
-    { icon: '🥈', label: 'Code Silver', value: snapshot.codeSilver, color: '#8C8C8C', bg: '#F0F0F0' },
-    { icon: '⬛', label: 'Code Grey',   value: snapshot.codeGrey,   color: '#5A5A5A', bg: '#ECECEC' },
+    { icon: '⚪', label: 'Code Silver', value: snapshot.codeSilver, color: '#8C8C8C', bg: '#F0F0F0' },
+    { icon: '⚫', label: 'Code Grey',   value: snapshot.codeGrey,   color: '#5A5A5A', bg: '#ECECEC' },
     { icon: '🔵', label: 'Code Blue',   value: snapshot.codeBlue,   color: 'var(--blue)', bg: 'var(--blue-light)' },
   ];
 
@@ -376,6 +386,34 @@ function renderHotTopics() {
       '</div>';
   } else {
     container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">🔥</span><span>No hot topics reported today</span></div>';
+  }
+}
+
+/* ============================================================
+   DAMA (Discharge Against Medical Advice)
+   ============================================================ */
+function renderDAMA() {
+  document.getElementById('damaCount').innerHTML =
+    '<div class="proc-card">' +
+    '<div class="proc-accent" style="background:var(--amber)"></div>' +
+    '<span class="proc-icon">🚪</span>' +
+    '<div class="proc-value">' + snapshot.damaCount + '</div>' +
+    '<div class="proc-label">DAMA Cases</div>' +
+    '<span class="proc-badge" style="background:var(--amber-light); color:#8A6D2A;">Today</span>' +
+    '</div>';
+
+  var container = document.getElementById('damaList');
+  if (snapshot.damaExplain && snapshot.damaExplain.trim() !== '') {
+    container.innerHTML =
+      '<div class="vip-card">' +
+      '<div class="vip-icon">🚪</div>' +
+      '<div class="vip-body">' +
+      '<div class="vip-name">DAMA Explanation</div>' +
+      '<div class="vip-note">' + snapshot.damaExplain + '</div>' +
+      '</div>' +
+      '</div>';
+  } else {
+    container.innerHTML = '<div class="vip-empty"><span style="font-size:22px;">🚪</span><span>No DAMA cases reported today</span></div>';
   }
 }
 
