@@ -422,3 +422,27 @@ footer {
 @media (max-width: 640px) {
   .proc-grid-2 { grid-template-columns: 1fr 1fr; }
 }
+
+/* ---- VIP TABLE ---- */
+.vip-table {
+  width: 100%; border-collapse: collapse;
+  background: #fff; border-radius: var(--radius); overflow: hidden;
+  box-shadow: var(--shadow); font-size: 13px;
+}
+.vip-table thead {
+  background: var(--blue-light);
+}
+.vip-table th {
+  text-align: left; padding: 10px 14px; font-size: 11px;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;
+  color: var(--blue); border-bottom: 1px solid var(--line);
+}
+.vip-table td {
+  padding: 12px 14px; border-bottom: 1px solid var(--line);
+  color: var(--ink); vertical-align: middle;
+}
+.vip-table tbody tr:last-child td { border-bottom: none; }
+.vip-table tbody tr:hover { background: var(--gray-light); }
+
+/* ---- SINGLE STAT CARD (DAMA) ---- */
+#damaCount .proc-card { max-width: 260px; }
