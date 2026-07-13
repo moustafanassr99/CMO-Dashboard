@@ -8,6 +8,6 @@ const CONFIG = {
   },
 
   refreshIntervalMinutes: 5,
-  totalBedsDefault:    80,
-  totalIcuBedsDefault: 12,
+  totalBedsDefault:    36,
+  totalIcuBedsDefault: 15,
 };
