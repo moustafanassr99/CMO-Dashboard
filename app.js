@@ -233,12 +233,14 @@ function capColor(pct) {
 }
 
 function renderCapacity() {
-  var availPct = totalBeds ? Math.round((snapshot.availBeds / totalBeds) * 100) : 0;
+  var ccuPct  = snapshot.ccuTotal  ? Math.round((snapshot.ccuOcc  / snapshot.ccuTotal)  * 100) : 0;
+  var picuPct = snapshot.picuTotal ? Math.round((snapshot.picuOcc / snapshot.picuTotal) * 100) : 0;
+
   var cards = [
-    { title: 'Total Beds',     value: totalBeds,           sub: 'hospital-wide',          pct: 100,        color: 'var(--blue)',        foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
-    { title: 'Occupied Beds',  value: snapshot.occBeds,    sub: occupancyPct + '% of capacity', pct: occupancyPct, color: capColor(occupancyPct), foot: 'of ' + totalBeds + ' total beds' },
-    { title: 'Available Beds', value: snapshot.availBeds,  sub: 'ready now',               pct: availPct,   color: 'var(--green)',        foot: availPct + '% open' },
-    { title: 'ICU Capacity',   value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
+    { title: 'Total Beds',    value: totalBeds, sub: 'hospital-wide', pct: 100, color: 'var(--blue)', foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
+    { title: 'CCU Capacity',  value: snapshot.ccuOcc + '/' + snapshot.ccuTotal,   sub: ccuPct + '% occupied',  pct: ccuPct,  color: capColor(ccuPct),  foot: (snapshot.ccuTotal - snapshot.ccuOcc) + ' CCU beds open' },
+    { title: 'PICU Capacity', value: snapshot.picuOcc + '/' + snapshot.picuTotal, sub: picuPct + '% occupied', pct: picuPct, color: capColor(picuPct), foot: (snapshot.picuTotal - snapshot.picuOcc) + ' PICU beds open' },
+    { title: 'ICU Capacity',  value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
   ];
 
   document.getElementById('capGrid').innerHTML = cards.map(function(c) {
@@ -249,7 +251,6 @@ function renderCapacity() {
       '</div>';
   }).join('');
 }
-
 /* ============================================================
    TODAY'S PROCEDURES — Cath Lab + Endoscopy only (2 cards)
    ============================================================ */
