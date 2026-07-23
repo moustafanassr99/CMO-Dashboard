@@ -119,7 +119,7 @@ async function loadDashboard() {
     renderKPIs();
     renderCapacity();
     renderProcedures();
-    renderOPDReferrals();
+   renderOPDReferrals();
     renderTomorrow();
     renderVIP();
     renderCodes();
@@ -272,6 +272,23 @@ function renderProcedures() {
       '<div class="proc-value">' + c.value + '</div>' +
       '<div class="proc-label">' + c.label + '</div>' +
       '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.badgeText + ';">' + c.badge + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function renderOPDReferrals() {
+  var cards = [
+    { icon: '🔪', label: 'OPD Referrals to OR',        value: snapshot.orRef,  color: 'var(--red)',  bg: 'var(--red-light)' },
+    { icon: '🛏️', label: 'OPD Referrals to Admission', value: snapshot.admRef, color: 'var(--blue)', bg: 'var(--blue-light)' },
+  ];
+
+  document.getElementById('opdReferralsGrid').innerHTML = cards.map(function(c) {
+    return '<div class="proc-card">' +
+      '<div class="proc-accent" style="background:' + c.color + '"></div>' +
+      '<span class="proc-icon">' + c.icon + '</span>' +
+      '<div class="proc-value">' + c.value + '</div>' +
+      '<div class="proc-label">' + c.label + '</div>' +
+      '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.color + ';">Today</span>' +
       '</div>';
   }).join('');
 }
