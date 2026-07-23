@@ -95,7 +95,7 @@ async function loadDashboard() {
       ccuTotal:  num(raw.CCUTotal || 14),
       picuOcc:   num(raw.PICUOccupied || 0),
       picuTotal: num(raw.PICUTotal || 3),
-    };    };
+    };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
     totalIcuBeds    = num(raw.TotalICUBeds)   || (snapshot.icuOcc  + snapshot.icuAvail)  || CONFIG.totalIcuBedsDefault;
