@@ -91,7 +91,11 @@ async function loadDashboard() {
       hotTopics:       raw.HotTopics || '',
       damaCount:       num(raw.DAMACount || 0),
       damaExplain:     raw.DAMAExplanation || '',
-    };
+      ccuOcc:    num(raw.CCUOccupied || 0),
+      ccuTotal:  num(raw.CCUTotal || 14),
+      picuOcc:   num(raw.PICUOccupied || 0),
+      picuTotal: num(raw.PICUTotal || 3),
+    };    };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
     totalIcuBeds    = num(raw.TotalICUBeds)   || (snapshot.icuOcc  + snapshot.icuAvail)  || CONFIG.totalIcuBedsDefault;
