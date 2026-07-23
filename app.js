@@ -119,6 +119,7 @@ async function loadDashboard() {
     renderKPIs();
     renderCapacity();
     renderProcedures();
+    renderOPDReferrals();
     renderTomorrow();
     renderVIP();
     renderCodes();
