@@ -91,10 +91,6 @@ async function loadDashboard() {
       hotTopics:       raw.HotTopics || '',
       damaCount:       num(raw.DAMACount || 0),
       damaExplain:     raw.DAMAExplanation || '',
-      ccuOcc:    num(raw.CCUOccupied || 0),
-      ccuTotal:  num(raw.CCUTotal || 14),
-      picuOcc:   num(raw.PICUOccupied || 0),
-      picuTotal: num(raw.PICUTotal || 7),
     };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
@@ -119,7 +115,6 @@ async function loadDashboard() {
     renderKPIs();
     renderCapacity();
     renderProcedures();
-   renderOPDReferrals();
     renderTomorrow();
     renderVIP();
     renderCodes();
@@ -238,14 +233,12 @@ function capColor(pct) {
 }
 
 function renderCapacity() {
-  var ccuPct  = snapshot.ccuTotal  ? Math.round((snapshot.ccuOcc  / snapshot.ccuTotal)  * 100) : 0;
-  var picuPct = snapshot.picuTotal ? Math.round((snapshot.picuOcc / snapshot.picuTotal) * 100) : 0;
-
+  var availPct = totalBeds ? Math.round((snapshot.availBeds / totalBeds) * 100) : 0;
   var cards = [
-    { title: 'Total Beds',    value: totalBeds, sub: 'hospital-wide', pct: 100, color: 'var(--blue)', foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
-    { title: 'CCU Capacity',  value: snapshot.ccuOcc + '/' + snapshot.ccuTotal,   sub: ccuPct + '% occupied',  pct: ccuPct,  color: capColor(ccuPct),  foot: (snapshot.ccuTotal - snapshot.ccuOcc) + ' CCU beds open' },
-    { title: 'PICU Capacity', value: snapshot.picuOcc + '/' + snapshot.picuTotal, sub: picuPct + '% occupied', pct: picuPct, color: capColor(picuPct), foot: (snapshot.picuTotal - snapshot.picuOcc) + ' PICU beds open' },
-    { title: 'ICU Capacity',  value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
+    { title: 'Total Beds',     value: totalBeds,           sub: 'hospital-wide',          pct: 100,        color: 'var(--blue)',        foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
+    { title: 'Occupied Beds',  value: snapshot.occBeds,    sub: occupancyPct + '% of capacity', pct: occupancyPct, color: capColor(occupancyPct), foot: 'of ' + totalBeds + ' total beds' },
+    { title: 'Available Beds', value: snapshot.availBeds,  sub: 'ready now',               pct: availPct,   color: 'var(--green)',        foot: availPct + '% open' },
+    { title: 'ICU Capacity',   value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
   ];
 
   document.getElementById('capGrid').innerHTML = cards.map(function(c) {
@@ -256,6 +249,7 @@ function renderCapacity() {
       '</div>';
   }).join('');
 }
+
 /* ============================================================
    TODAY'S PROCEDURES — Cath Lab + Endoscopy only (2 cards)
    ============================================================ */
@@ -272,23 +266,6 @@ function renderProcedures() {
       '<div class="proc-value">' + c.value + '</div>' +
       '<div class="proc-label">' + c.label + '</div>' +
       '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.badgeText + ';">' + c.badge + '</span>' +
-      '</div>';
-  }).join('');
-}
-
-function renderOPDReferrals() {
-  var cards = [
-    { icon: '🔪', label: 'OPD Referrals to OR',        value: snapshot.orRef,  color: 'var(--red)',  bg: 'var(--red-light)' },
-    { icon: '🛏️', label: 'OPD Referrals to Admission', value: snapshot.admRef, color: 'var(--blue)', bg: 'var(--blue-light)' },
-  ];
-
-  document.getElementById('opdReferralsGrid').innerHTML = cards.map(function(c) {
-    return '<div class="proc-card">' +
-      '<div class="proc-accent" style="background:' + c.color + '"></div>' +
-      '<span class="proc-icon">' + c.icon + '</span>' +
-      '<div class="proc-value">' + c.value + '</div>' +
-      '<div class="proc-label">' + c.label + '</div>' +
-      '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.color + ';">Today</span>' +
       '</div>';
   }).join('');
 }
