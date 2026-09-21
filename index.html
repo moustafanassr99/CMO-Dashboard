@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cleopatra Sky Hospital — CMO Command Center</title>
-<meta name="description" content="Executive Command Center — Cleopatra Sky Hospital">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -23,7 +22,7 @@
   <div class="topbar-right">
     <div class="live-badge" id="liveBadge">
       <span class="live-dot"></span>
-      <span id="liveLabel">Connecting…</span>
+      <span id="liveLabel">Connecting...</span>
     </div>
     <div class="nav-pills">
       <button class="nav-pill active" data-view="cmo">CMO View</button>
@@ -37,20 +36,20 @@
   <!-- ======================= CMO VIEW ======================= -->
   <div class="view active" id="view-cmo">
 
-    <!-- PULSE STRIP -->
+    <!-- PULSE -->
     <div class="pulse">
       <div class="pulse-dot green" id="pulseDot"></div>
       <div class="pulse-text">
         <div class="label">Hospital Pulse</div>
-        <div class="headline" id="pulseHeadline">Loading today's hospital data…</div>
+        <div class="headline" id="pulseHeadline">Loading hospital data...</div>
       </div>
       <div class="pulse-date">
         <strong id="pulseDateLabel">—</strong>
-        <span id="pulseUpdated">Connecting to live feed…</span>
+        <span id="pulseUpdated">Connecting to live feed...</span>
       </div>
     </div>
 
-    <!-- ERROR BANNER (hidden by default) -->
+    <!-- ERROR BANNER -->
     <div class="error-banner" id="errorBanner" style="display:none;">
       <span>⚠️</span>
       <span id="errorMsg">Unable to load live data.</span>
@@ -64,15 +63,10 @@
         <span class="sub" id="kpiSub">As of this morning</span>
       </div>
       <div class="kpi-grid" id="kpiGrid">
-        <!-- Skeleton loaders -->
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
-        <div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
+        <div class="kpi-card skeleton"></div><div class="kpi-card skeleton"></div>
       </div>
     </div>
 
@@ -83,48 +77,41 @@
         <span class="sub">Live bed status</span>
       </div>
       <div class="capacity-grid" id="capGrid">
-        <div class="cap-card skeleton"></div>
-        <div class="cap-card skeleton"></div>
-        <div class="cap-card skeleton"></div>
-        <div class="cap-card skeleton"></div>
+        <div class="cap-card skeleton"></div><div class="cap-card skeleton"></div>
+        <div class="cap-card skeleton"></div><div class="cap-card skeleton"></div>
       </div>
     </div>
 
-  <!-- OPD REFERRALS -->
-<div class="section">
-  <div class="section-head">
-    <h2>OPD Referrals</h2>
-    <span class="sub">Today's referrals to OR and Admission</span>
-  </div>
-  <div class="proc-grid proc-grid-2" id="opdReferralsGrid">
-    <div class="proc-card skeleton"></div>
-    <div class="proc-card skeleton"></div>
-  </div>
-</div>
+    <!-- OPD REFERRALS -->
+    <div class="section">
+      <div class="section-head">
+        <h2>OPD Referrals</h2>
+        <span class="sub">Today's referrals to OR and Admission</span>
+      </div>
+      <div class="proc-grid proc-grid-2" id="opdReferralsGrid">
+        <div class="proc-card skeleton"></div><div class="proc-card skeleton"></div>
+      </div>
+    </div>
 
-    <!-- PROCEDURES TODAY -->
+    <!-- TODAY'S PROCEDURES -->
     <div class="section">
       <div class="section-head">
         <h2>Today's Procedures</h2>
-        <span class="sub">Cath Lab · Endoscopy · Surgeries · OR Tomorrow</span>
+        <span class="sub">Cath Lab · Endoscopy</span>
       </div>
       <div class="proc-grid proc-grid-2" id="procGrid">
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div><div class="proc-card skeleton"></div>
       </div>
     </div>
 
-    <!-- TOMORROW SCHEDULE -->
+    <!-- TOMORROW'S SCHEDULE -->
     <div class="section">
       <div class="section-head">
         <h2>Tomorrow's Schedule</h2>
         <span class="sub">Planned procedures for tomorrow</span>
       </div>
       <div class="proc-grid" id="tomorrowGrid">
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div><div class="proc-card skeleton"></div><div class="proc-card skeleton"></div>
       </div>
     </div>
 
@@ -135,10 +122,7 @@
         <span class="sub">Today's VIP patient status</span>
       </div>
       <div class="vip-section" id="vipList">
-        <div class="vip-empty">
-          <span style="font-size:22px;">👑</span>
-          <span>Loading VIP data...</span>
-        </div>
+        <div class="vip-empty"><span style="font-size:22px;">👑</span><span>Loading VIP data...</span></div>
       </div>
     </div>
 
@@ -146,32 +130,24 @@
     <div class="section">
       <div class="section-head">
         <h2>Hospital Codes</h2>
-        <span class="sub">Code Silver · Grey · Blue — counts and details</span>
+        <span class="sub">Code Silver · Grey · Blue</span>
       </div>
       <div class="proc-grid" id="codesGrid">
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
-        <div class="proc-card skeleton"></div>
+        <div class="proc-card skeleton"></div><div class="proc-card skeleton"></div><div class="proc-card skeleton"></div>
       </div>
       <div class="vip-section" id="codesList" style="margin-top:14px;">
-        <div class="vip-empty">
-          <span style="font-size:22px;">🚨</span>
-          <span>Loading code data...</span>
-        </div>
+        <div class="vip-empty"><span style="font-size:22px;">🚨</span><span>Loading code data...</span></div>
       </div>
     </div>
 
-    <!-- HOSPITAL HOT TOPICS -->
+    <!-- HOT TOPICS -->
     <div class="section">
       <div class="section-head">
         <h2>Hospital Hot Topics</h2>
-        <span class="sub">Today's key updates and announcements</span>
+        <span class="sub">Today's key updates</span>
       </div>
       <div class="vip-section" id="hotTopicsList">
-        <div class="vip-empty">
-          <span style="font-size:22px;">🔥</span>
-          <span>Loading hot topics...</span>
-        </div>
+        <div class="vip-empty"><span style="font-size:22px;">🔥</span><span>Loading hot topics...</span></div>
       </div>
     </div>
 
@@ -181,14 +157,9 @@
         <h2>DAMA</h2>
         <span class="sub">Discharge Against Medical Advice</span>
       </div>
-      <div id="damaCount">
-        <div class="proc-card skeleton"></div>
-      </div>
+      <div id="damaCount"><div class="proc-card skeleton"></div></div>
       <div class="vip-section" id="damaList" style="margin-top:14px;">
-        <div class="vip-empty">
-          <span style="font-size:22px;">🚪</span>
-          <span>Loading DAMA data...</span>
-        </div>
+        <div class="vip-empty"><span style="font-size:22px;">🚪</span><span>Loading DAMA data...</span></div>
       </div>
     </div>
 
@@ -222,14 +193,14 @@
       </div>
     </div>
 
-    <footer>Cleopatra Sky Hospital · Internal Executive Use Only · Data refreshes automatically on every submission</footer>
+    <footer>Cleopatra Sky Hospital · Internal Executive Use Only · Data refreshes automatically</footer>
   </div>
 
   <!-- ======================= DATA ENTRY VIEW ======================= -->
   <div class="view" id="view-dept">
     <div class="dept-shell">
       <div class="section-head" style="margin-bottom:18px;">
-        <h2 style="font-family:'Playfair Display',serif; font-size:17px; color:var(--blue);">Daily Report Entry</h2>
+        <h2>Daily Report Entry</h2>
         <span class="sub">Submit today's figures via Microsoft Forms</span>
       </div>
       <div id="formLaunchers"></div>
