@@ -91,13 +91,18 @@ async function loadDashboard() {
       hotTopics:       raw.HotTopics || '',
       damaCount:       num(raw.DAMACount || 0),
       damaExplain:     raw.DAMAExplanation || '',
+      ccuOcc:          num(raw.CCUOccupied || 0),
+      ccuTotal:        CONFIG.ccuBeds,
+      picuOcc:         num(raw.PICUOccupied || 0),
+      picuTotal:       CONFIG.picuBeds,
     };
 
-    totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
-    totalIcuBeds    = num(raw.TotalICUBeds)   || (snapshot.icuOcc  + snapshot.icuAvail)  || CONFIG.totalIcuBedsDefault;
+    totalBeds       = CONFIG.totalBedsDefault;
+    totalIcuBeds    = CONFIG.icuBeds;
     totalAdmissions = num(raw.TotalAdmissions)|| (snapshot.admRef  + snapshot.edAdm);
-    occupancyPct    = num(raw.OccupancyPct)   || (totalBeds    ? Math.round((snapshot.occBeds / totalBeds)    * 100) : 0);
-    icuPct          = num(raw.ICUOccupancyPct)|| (totalIcuBeds ? Math.round((snapshot.icuOcc  / totalIcuBeds) * 100) : 0);
+    occupancyPct    = totalBeds    ? Math.round((snapshot.occBeds / totalBeds)    * 100) : 0;
+    icuPct          = totalIcuBeds ? Math.round((snapshot.icuOcc  / totalIcuBeds) * 100) : 0;
+    snapshot.icuAvail = Math.max(totalIcuBeds - snapshot.icuOcc, 0);
     pulseStatusText   = String(raw.PulseStatus   || '');
     deptsReportedText = String(raw.DeptsReported || '');
 
@@ -112,15 +117,10 @@ async function loadDashboard() {
     setLiveBadge('live');
     hideError();
     setPulse();
-    renderKPIs();
-    renderCapacity();
-    renderProcedures();
-    renderTomorrow();
-    renderVIP();
-    renderCodes();
-    renderHotTopics();
-    renderDAMA();
-    renderTrends();
+    [renderKPIs, renderCapacity, renderOPDReferrals, renderProcedures, renderTomorrow,
+     renderVIP, renderCodes, renderHotTopics, renderDAMA, renderTrends].forEach(function(fn) {
+      try { fn(); } catch (e) { console.error('[CMO Dashboard] ' + fn.name + ' failed:', e); }
+    });
 
   } catch (err) {
     console.error('[CMO Dashboard]', err);
@@ -233,12 +233,14 @@ function capColor(pct) {
 }
 
 function renderCapacity() {
-  var availPct = totalBeds ? Math.round((snapshot.availBeds / totalBeds) * 100) : 0;
+  var ccuPct  = snapshot.ccuTotal  ? Math.round((snapshot.ccuOcc  / snapshot.ccuTotal)  * 100) : 0;
+  var picuPct = snapshot.picuTotal ? Math.round((snapshot.picuOcc / snapshot.picuTotal) * 100) : 0;
+
   var cards = [
-    { title: 'Total Beds',     value: totalBeds,           sub: 'hospital-wide',          pct: 100,        color: 'var(--blue)',        foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
-    { title: 'Occupied Beds',  value: snapshot.occBeds,    sub: occupancyPct + '% of capacity', pct: occupancyPct, color: capColor(occupancyPct), foot: 'of ' + totalBeds + ' total beds' },
-    { title: 'Available Beds', value: snapshot.availBeds,  sub: 'ready now',               pct: availPct,   color: 'var(--green)',        foot: availPct + '% open' },
-    { title: 'ICU Capacity',   value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
+    { title: 'Total Beds',    value: totalBeds, sub: 'general ward', pct: 100, color: 'var(--blue)', foot: snapshot.occBeds + ' occupied · ' + snapshot.availBeds + ' open' },
+    { title: 'CCU Capacity',  value: snapshot.ccuOcc + '/' + snapshot.ccuTotal,   sub: ccuPct + '% occupied',  pct: ccuPct,  color: capColor(ccuPct),  foot: (snapshot.ccuTotal - snapshot.ccuOcc) + ' CCU beds open' },
+    { title: 'PICU / NICU', value: snapshot.picuOcc + '/' + snapshot.picuTotal, sub: picuPct + '% occupied', pct: picuPct, color: capColor(picuPct), foot: (snapshot.picuTotal - snapshot.picuOcc) + ' beds open' },
+    { title: 'ICU Capacity',  value: snapshot.icuOcc + '/' + totalIcuBeds, sub: icuPct + '% occupied', pct: icuPct, color: capColor(icuPct), foot: snapshot.icuAvail + ' ICU beds open' },
   ];
 
   document.getElementById('capGrid').innerHTML = cards.map(function(c) {
@@ -249,7 +251,6 @@ function renderCapacity() {
       '</div>';
   }).join('');
 }
-
 /* ============================================================
    TODAY'S PROCEDURES — Cath Lab + Endoscopy only (2 cards)
    ============================================================ */
@@ -266,6 +267,23 @@ function renderProcedures() {
       '<div class="proc-value">' + c.value + '</div>' +
       '<div class="proc-label">' + c.label + '</div>' +
       '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.badgeText + ';">' + c.badge + '</span>' +
+      '</div>';
+  }).join('');
+}
+
+function renderOPDReferrals() {
+  var cards = [
+    { icon: '🔪', label: 'OPD Referrals to OR',        value: snapshot.orRef,  color: 'var(--red)',  bg: 'var(--red-light)' },
+    { icon: '🛏️', label: 'OPD Referrals to Admission', value: snapshot.admRef, color: 'var(--blue)', bg: 'var(--blue-light)' },
+  ];
+
+  document.getElementById('opdReferralsGrid').innerHTML = cards.map(function(c) {
+    return '<div class="proc-card">' +
+      '<div class="proc-accent" style="background:' + c.color + '"></div>' +
+      '<span class="proc-icon">' + c.icon + '</span>' +
+      '<div class="proc-value">' + c.value + '</div>' +
+      '<div class="proc-label">' + c.label + '</div>' +
+      '<span class="proc-badge" style="background:' + c.bg + '; color:' + c.color + ';">Today</span>' +
       '</div>';
   }).join('');
 }
