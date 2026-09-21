@@ -94,7 +94,7 @@ async function loadDashboard() {
       ccuOcc:    num(raw.CCUOccupied || 0),
       ccuTotal:  num(raw.CCUTotal || 14),
       picuOcc:   num(raw.PICUOccupied || 0),
-      picuTotal: num(raw.PICUTotal || 3),
+      picuTotal: num(raw.PICUTotal || 7),
     };
 
     totalBeds       = num(raw.TotalBeds)      || (snapshot.occBeds + snapshot.availBeds) || CONFIG.totalBedsDefault;
