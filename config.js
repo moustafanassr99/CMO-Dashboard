@@ -9,5 +9,5 @@ const CONFIG = {
 
   refreshIntervalMinutes: 5,
   totalBedsDefault:    63,
-  totalIcuBedsDefault: 15,
+  totalIcuBedsDefault: 26,
 };
